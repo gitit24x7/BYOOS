@@ -187,7 +187,7 @@ int main() {
               label: 'Step 3: iretq — the actual jump',
               what: 'In real assembly, a single instruction causes the CPU to jump to the restored rip value — resuming the new process.',
               why: 'The OS cannot use a normal function call to return to the new process — it was not called from there. Instead, it uses a special interrupt-return instruction (iretq on x86-64) that atomically restores the instruction pointer, stack pointer, and CPU flags in one step. The CPU suddenly "is" the new process.',
-              note: 'This is one of the most elegant moments in OS design. A single assembly instruction ends the OS\'s execution and begins another program\'s execution. The boundary between the OS and the user process is crossed in a single CPU cycle.',
+              note: 'This is one of the most elegant moments in OS design. A single assembly instruction ends the OS\'s execution and begins another program\'s execution. The boundary between the OS and the user process is crossed in a single CPU cycle. If you\'ve taken Module P05, iretq is the exact counterpart to the automatic state-push that happens when an interrupt fires — this whole context switch is triggered by the timer interrupt from that chapter, and P03\'s stack chapter covers the push/pop mechanics iretq builds on.',
             },
           ],
         },

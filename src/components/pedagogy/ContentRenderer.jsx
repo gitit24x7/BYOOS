@@ -2,12 +2,16 @@ import CalloutBox from './CalloutBox'
 import SocraticPause from './SocraticPause'
 import ExplicitInsight, { WhatThisMeans } from './ExplicitInsight'
 import ConnectionBridge from './ConnectionBridge'
+import TraceChain from './TraceChain'
 import CodePane from '../code/CodePane'
 import CPUSchedulerSim from '../simulators/CPUSchedulerSim'
 import BootSequenceSim from '../simulators/BootSequenceSim'
 import MemoryMapSim from '../simulators/MemoryMapSim'
 import SyscallTraceSim from '../simulators/SyscallTraceSim'
 import ForkTreeSim from '../simulators/ForkTreeSim'
+import BitFlipperSim from '../simulators/BitFlipperSim'
+import ProtectedModeSim from '../simulators/ProtectedModeSim'
+import InterruptTraceSim from '../simulators/InterruptTraceSim'
 
 // Render inline markdown-ish text: **bold** and `code`
 function RichText({ text }) {
@@ -75,6 +79,9 @@ function SimulatorBlock({ block }) {
   if (block.id === 'memory-map-sim') return <MemoryMapSim />
   if (block.id === 'syscall-trace-sim') return <SyscallTraceSim />
   if (block.id === 'fork-tree-sim') return <ForkTreeSim />
+  if (block.id === 'bit-flipper-sim') return <BitFlipperSim />
+  if (block.id === 'protected-mode-sim') return <ProtectedModeSim />
+  if (block.id === 'interrupt-trace-sim') return <InterruptTraceSim />
   return null
 }
 
@@ -94,6 +101,7 @@ export default function ContentRenderer({ blocks }) {
           case 'explicit-insight': return <ExplicitInsight key={i} block={block} />
           case 'connection-bridge': return <ConnectionBridge key={i} block={block} />
           case 'what-this-means': return <WhatThisMeans key={i} block={block} />
+          case 'trace':           return <TraceChain key={i} block={block} />
           default:               return null
         }
       })}

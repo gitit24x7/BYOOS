@@ -88,7 +88,7 @@ export default function LandingPage() {
             <div className="flex items-center justify-center gap-8 pt-4 text-sm text-white/25">
               <div className="flex items-center gap-1.5"><span className="font-bold text-white/40">{total}</span> modules</div>
               <div className="w-px h-4 bg-white/10" />
-              <div className="flex items-center gap-1.5"><span className="font-bold text-white/40">5</span> live simulators</div>
+              <div className="flex items-center gap-1.5"><span className="font-bold text-white/40">8</span> live simulators</div>
               <div className="w-px h-4 bg-white/10" />
               <div className="flex items-center gap-1.5"><span className="font-bold text-white/40">0</span> prior OS knowledge needed</div>
             </div>
@@ -128,63 +128,79 @@ export default function LandingPage() {
       </div>
 
       {/* Module list */}
-      <div className="max-w-3xl mx-auto px-6 pb-20 space-y-4">
-        <h2 className="text-xl font-black text-white mb-6">The curriculum</h2>
-        {curriculum.map((mod, i) => {
-          const done = isComplete(mod.id)
-          return (
-            <motion.button
-              key={mod.id}
-              initial={{ opacity: 0, x: -8 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: i * 0.06 }}
-              onClick={() => !mod.comingSoon && navigate(`/chapter/${mod.id}`)}
-              disabled={mod.comingSoon}
-              className={`w-full text-left flex items-start gap-4 p-4 md:p-5 rounded-2xl border transition-all duration-200 ${
-                mod.comingSoon
-                  ? 'opacity-40 cursor-not-allowed border-white/[0.05] bg-white/[0.02]'
-                  : 'border-white/[0.08] bg-white/[0.02] hover:bg-white/[0.05] hover:border-white/[0.14] cursor-pointer group'
-              }`}
-            >
-              {/* Number */}
-              <div
-                className="w-10 h-10 rounded-xl flex items-center justify-center text-xs font-black flex-shrink-0"
-                style={{
-                  backgroundColor: done ? 'rgba(74,222,128,0.15)' : `${mod.color}15`,
-                  color: done ? '#4ade80' : mod.color,
-                }}
-              >
-                {done ? <CheckCircle2 size={17} /> : mod.comingSoon ? <Lock size={14} /> : mod.icon}
-              </div>
-
-              {/* Content */}
-              <div className="flex-1 min-w-0">
-                <div className="flex items-baseline gap-2 flex-wrap">
-                  <span className="text-[11px] font-mono text-white/25">{mod.number}</span>
-                  <span className="text-sm md:text-base font-bold text-white">{mod.title}</span>
-                  {mod.comingSoon && <span className="text-[10px] text-white/20 border border-white/10 px-1.5 py-0.5 rounded-full">Coming soon</span>}
-                </div>
-                <p className="text-xs md:text-sm text-white/40 mt-1 leading-relaxed">{mod.subtitle}</p>
-                <div className="flex items-center gap-3 mt-2">
-                  <div className="flex gap-1 flex-wrap">
-                    {mod.tags.map(tag => (
-                      <span key={tag} className="text-[10px] px-2 py-0.5 rounded-full bg-white/[0.05] text-white/25">{tag}</span>
-                    ))}
-                  </div>
-                  <div className="flex items-center gap-1 ml-auto text-white/20">
-                    <Clock size={11} />
-                    <span className="text-[11px] font-mono">{mod.duration}</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Arrow */}
-              {!mod.comingSoon && (
-                <ChevronRight size={16} className="text-white/15 group-hover:text-white/40 transition-colors flex-shrink-0 mt-1" />
+      <div className="max-w-3xl mx-auto px-6 pb-20 space-y-10">
+        {Object.entries(
+          curriculum.reduce((groups, mod) => {
+            (groups[mod.section] ||= []).push(mod)
+            return groups
+          }, {})
+        ).map(([section, mods]) => (
+          <div key={section} className="space-y-4">
+            <div>
+              <h2 className="text-xl font-black text-white">{section}</h2>
+              {section === 'Prerequisites' && (
+                <p className="text-xs text-white/35 mt-1">
+                  The background OSDev.org expects you to already have. Taught here, in the same depth, so you never have to leave.
+                </p>
               )}
-            </motion.button>
-          )
-        })}
+            </div>
+            {mods.map((mod, i) => {
+              const done = isComplete(mod.id)
+              return (
+                <motion.button
+                  key={mod.id}
+                  initial={{ opacity: 0, x: -8 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.06 }}
+                  onClick={() => !mod.comingSoon && navigate(`/chapter/${mod.id}`)}
+                  disabled={mod.comingSoon}
+                  className={`w-full text-left flex items-start gap-4 p-4 md:p-5 rounded-2xl border transition-all duration-200 ${
+                    mod.comingSoon
+                      ? 'opacity-40 cursor-not-allowed border-white/[0.05] bg-white/[0.02]'
+                      : 'border-white/[0.08] bg-white/[0.02] hover:bg-white/[0.05] hover:border-white/[0.14] cursor-pointer group'
+                  }`}
+                >
+                  {/* Number */}
+                  <div
+                    className="w-10 h-10 rounded-xl flex items-center justify-center text-xs font-black flex-shrink-0"
+                    style={{
+                      backgroundColor: done ? 'rgba(74,222,128,0.15)' : `${mod.color}15`,
+                      color: done ? '#4ade80' : mod.color,
+                    }}
+                  >
+                    {done ? <CheckCircle2 size={17} /> : mod.comingSoon ? <Lock size={14} /> : mod.icon}
+                  </div>
+
+                  {/* Content */}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-baseline gap-2 flex-wrap">
+                      <span className="text-[11px] font-mono text-white/25">{mod.number}</span>
+                      <span className="text-sm md:text-base font-bold text-white">{mod.title}</span>
+                      {mod.comingSoon && <span className="text-[10px] text-white/20 border border-white/10 px-1.5 py-0.5 rounded-full">Coming soon</span>}
+                    </div>
+                    <p className="text-xs md:text-sm text-white/40 mt-1 leading-relaxed">{mod.subtitle}</p>
+                    <div className="flex items-center gap-3 mt-2">
+                      <div className="flex gap-1 flex-wrap">
+                        {mod.tags.map(tag => (
+                          <span key={tag} className="text-[10px] px-2 py-0.5 rounded-full bg-white/[0.05] text-white/25">{tag}</span>
+                        ))}
+                      </div>
+                      <div className="flex items-center gap-1 ml-auto text-white/20">
+                        <Clock size={11} />
+                        <span className="text-[11px] font-mono">{mod.duration}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Arrow */}
+                  {!mod.comingSoon && (
+                    <ChevronRight size={16} className="text-white/15 group-hover:text-white/40 transition-colors flex-shrink-0 mt-1" />
+                  )}
+                </motion.button>
+              )
+            })}
+          </div>
+        ))}
       </div>
     </div>
   )

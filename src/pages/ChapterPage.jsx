@@ -5,16 +5,25 @@ import AppShell from '../components/layout/AppShell'
 import MysteryOpener from '../components/pedagogy/MysteryOpener'
 import ContentRenderer from '../components/pedagogy/ContentRenderer'
 import TheReveal from '../components/pedagogy/TheReveal'
-import { getModule } from '../data/curriculum'
+import { curriculum, getModule } from '../data/curriculum'
 import { m00 } from '../data/m00_bigquestion'
 import { m01 } from '../data/m01_bootloader'
+import { p01 } from '../data/p01_bits'
+import { p02 } from '../data/p02_freestanding_c'
+import { p03 } from '../data/p03_registers'
+import { p04 } from '../data/p04_protected_mode'
+import { p05 } from '../data/p05_interrupts'
+import { p06 } from '../data/p06_executables'
+import { p07 } from '../data/p07_dev_environment'
 import { m02 } from '../data/m02_memory'
 import { m03 } from '../data/m03_scheduler'
 import { m04 } from '../data/m04_syscalls'
 import { m05 } from '../data/m05_shell'
+import { m06 } from '../data/m06_real_os'
+import { m07 } from '../data/m07_scenarios'
 import { useProgress } from '../hooks/useProgress'
 
-const moduleData = { M00: m00, M01: m01, M02: m02, M03: m03, M04: m04, M05: m05 }
+const moduleData = { M00: m00, M01: m01, P01: p01, P02: p02, P03: p03, P04: p04, P05: p05, P06: p06, P07: p07, M02: m02, M03: m03, M04: m04, M05: m05, M06: m06, M07: m07 }
 
 export default function ChapterPage() {
   const { moduleId } = useParams()
@@ -42,14 +51,14 @@ export default function ChapterPage() {
     const onKey = (e) => {
       if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return
       if (e.key === 'Escape') { navigate('/'); return }
+      const currIdx = curriculum.findIndex(m => m.id === moduleId)
       if (e.key === 'ArrowRight') {
-        const curr = parseInt(moduleId.replace('M', ''))
-        const nextId = `M${String(curr + 1).padStart(2, '0')}`
-        if (moduleData[nextId]) navigate(`/chapter/${nextId}`)
+        const next = curriculum[currIdx + 1]
+        if (next && moduleData[next.id]) navigate(`/chapter/${next.id}`)
       }
       if (e.key === 'ArrowLeft') {
-        const curr = parseInt(moduleId.replace('M', ''))
-        if (curr > 0) navigate(`/chapter/M${String(curr - 1).padStart(2, '0')}`)
+        const prev = curriculum[currIdx - 1]
+        if (prev) navigate(`/chapter/${prev.id}`)
         else navigate('/')
       }
     }
@@ -100,10 +109,10 @@ export default function ChapterPage() {
   )
 
   const goToNext = () => {
-    const curr = parseInt(moduleId.replace('M', ''))
-    const nextId = `M${String(curr + 1).padStart(2, '0')}`
+    const currIdx = curriculum.findIndex(m => m.id === moduleId)
+    const next = curriculum[currIdx + 1]
     markComplete(moduleId)
-    navigate(`/chapter/${nextId}`)
+    if (next) navigate(`/chapter/${next.id}`)
   }
 
   const scrollToSection = (i) => {

@@ -199,7 +199,7 @@ int main() {
               label: 'if (frame == -1) → PAGE FAULT',
               what: 'Detects a valid virtual address that is not currently in RAM.',
               why: 'A page fault is not a crash — it is a request. The OS catches this hardware exception, loads the missing page from disk (if it was swapped out) or allocates a new physical frame (if it is a newly accessed page), updates the page table, and resumes your program. Your program never sees this happen. The "page fault" name is confusing — it is actually a normal event that happens thousands of times per second.',
-              note: 'There are different kinds of page faults. A "minor" fault means the page is already in memory but not in this process\'s page table — no disk I/O needed, just update the mapping. A "major" fault means the page must be read from disk — this is slow and this is why running out of RAM makes your computer crawl.',
+              note: 'There are different kinds of page faults. A "minor" fault means the page is already in memory but not in this process\'s page table — no disk I/O needed, just update the mapping. A "major" fault means the page must be read from disk — this is slow and this is why running out of RAM makes your computer crawl. If you\'ve taken Module P05, this is the exact mechanism from that chapter: a page fault is CPU exception vector 14, routed through the IDT just like a timer tick or a syscall — the CPU itself is the trigger, and CR2 (mentioned in P05) holds the faulting address.',
             },
             {
               lines: [33],

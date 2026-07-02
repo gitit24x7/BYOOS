@@ -298,7 +298,7 @@ int main() {
           explanations: [
             'exec() alone cannot create a new process — it only replaces the current one. If the shell called exec(), the shell itself would disappear and become ls. That\'s not what you want.',
             'You need at least fork() and exec(), but in practice there are more. exec() itself internally calls open() and read() to load the ls binary, mmap() to set up virtual memory, and more.',
-            'Exactly right — and this undersells it. The full sequence: fork() to create a copy of the shell. In the child: open() + read() to stat each directory in PATH looking for "ls". Once found, execve("/bin/ls", ["ls", "-la"], env) to replace the child with ls. Inside execve: open() the binary, read() the ELF header, mmap() the code and data segments, set up the new stack, jump to _start. By the time ls\'s main() runs, dozens of system calls have happened.',
+            'Exactly right — and this undersells it. The full sequence: fork() to create a copy of the shell. In the child: open() + read() to stat each directory in PATH looking for "ls". Once found, execve("/bin/ls", ["ls", "-la"], env) to replace the child with ls. Inside execve: open() the binary, read() the ELF header, mmap() the code and data segments, set up the new stack, jump to _start. By the time ls\'s main() runs, dozens of system calls have happened. If you\'ve taken Module P06, that ELF header is exactly the format your own kernel gets linked into — the same sections, the same entry point convention, just read by the kernel here instead of by a bootloader.',
           ],
         },
       ],
@@ -315,6 +315,6 @@ int main() {
       { label: 'Child exits', sublabel: 'Parent collects status, repeats' },
     ],
     finalInsight: 'You have now traced the complete ancestry of every process on your computer. They are all descendants of PID 1. Every one of them was created by fork(). Every one of them that runs a different program called exec() to become it. The shell you use every day is a while loop around fork()+exec()+waitpid(). Your entire computing environment — every running program, every background service, every daemon — is a tree of processes created by exactly these two system calls, in exactly this pattern, since 1971.',
-    nextChapter: 'You have built the complete mental model of how an operating system works: from the 512-byte bootloader that starts it, through virtual memory that isolates processes, through the scheduler that juggles them, through system calls that let them talk to the kernel, and through fork()+exec() that creates them. You now understand your computer from the ground up.',
+    nextChapter: 'You have built the complete mental model of how an operating system works: from the 512-byte bootloader that starts it, through virtual memory that isolates processes, through the scheduler that juggles them, through system calls that let them talk to the kernel, and through fork()+exec() that creates them. Next: every OS you actually use — Linux, Windows, macOS — assembles these same six mechanisms differently. Module 6 shows you how real kernels are architected, and where each one draws the line between "trusted" and "everything else."',
   },
 }
