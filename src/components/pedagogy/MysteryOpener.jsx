@@ -21,7 +21,8 @@ export default function MysteryOpener({ data, onReady }) {
     <div className="relative flex flex-col items-center justify-center h-full bg-[#09090d] overflow-hidden">
       {/* Background glow */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <div className="w-[600px] h-[600px] rounded-full bg-blue-600/5 blur-3xl" />
+        <div className="w-[600px] h-[600px] rounded-full bg-blue-600/6 blur-3xl" />
+        <div className="absolute w-[320px] h-[320px] -translate-x-32 translate-y-24 rounded-full bg-purple-600/8 blur-3xl" />
       </div>
 
       {/* Grid overlay */}
@@ -69,13 +70,14 @@ export default function MysteryOpener({ data, onReady }) {
             </p>
             <button
               onClick={onReady}
-              className="group relative px-8 py-3.5 rounded-full text-sm font-bold tracking-wide overflow-hidden transition-all hover:scale-105 active:scale-95"
+              className="btn-primary px-8 py-3.5 text-sm tracking-wide"
               style={{
                 background: 'linear-gradient(135deg, #3b82f6, #8b5cf6)',
-                boxShadow: '0 0 40px rgba(99,102,241,0.3)',
+                '--btn-glow': 'rgba(99,102,241,0.4)',
+                color: '#fff',
               }}
             >
-              <span className="relative z-10 text-white">I'm ready — show me how →</span>
+              I'm ready — show me how →
             </button>
           </motion.div>
         )}

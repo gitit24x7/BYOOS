@@ -212,11 +212,12 @@ export default function ForkTreeSim() {
         <div className="flex gap-2">
           <button
             onClick={() => handleFork(2)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-blue-500/15 text-blue-400 hover:bg-blue-500/25 transition-colors"
+            className="btn-primary flex items-center gap-1.5 px-3 py-1.5 text-xs"
+            style={{ background: 'linear-gradient(135deg, #5e9eff, #4ade80)', '--btn-glow': 'rgba(94,158,255,0.4)' }}
           >
             <Plus size={11} /> fork() from bash
           </button>
-          <button onClick={reset} className="p-1.5 rounded text-white/30 hover:text-white/60 transition-colors">
+          <button onClick={reset} className="p-1.5 rounded-full text-white/30 hover:text-white/70 hover:bg-white/[0.07] transition-all">
             <RotateCcw size={13} />
           </button>
         </div>

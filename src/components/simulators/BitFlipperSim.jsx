@@ -61,7 +61,7 @@ export default function BitFlipperSim() {
     <div className="my-8 rounded-2xl border border-white/[0.08] overflow-hidden bg-[#0c0c14]">
       <div className="flex items-center justify-between px-5 py-3.5 border-b border-white/[0.06] bg-white/[0.02]">
         <span className="text-xs font-mono text-white/50">Bit Flipper — click any square to toggle that bit</span>
-        <button onClick={reset} className="p-1.5 rounded text-white/30 hover:text-white/60 transition-colors">
+        <button onClick={reset} className="p-1.5 rounded-full text-white/30 hover:text-white/70 hover:bg-white/[0.07] transition-all">
           <RotateCcw size={13} />
         </button>
       </div>

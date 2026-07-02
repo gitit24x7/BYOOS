@@ -8,7 +8,7 @@ export default function AppShell({ children }) {
   const { moduleId } = useParams()
   const navigate = useNavigate()
   const { isComplete, getCompletedCount } = useProgress()
-  const [sidebarOpen, setSidebarOpen] = useState(true)
+  const [sidebarOpen, setSidebarOpen] = useState(() => typeof window !== 'undefined' ? window.innerWidth >= 1024 : true)
 
   const currentIndex = curriculum.findIndex(m => m.id === moduleId)
   const current = curriculum[currentIndex]
@@ -17,22 +17,35 @@ export default function AppShell({ children }) {
 
   return (
     <div className="flex h-full overflow-hidden bg-[#09090d]">
-      {/* Sidebar */}
+      {/* Mobile backdrop — closes the drawer on tap */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/60 z-30 lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
+      {/* Sidebar — fixed overlay drawer on mobile, in-flow panel on desktop */}
       <aside
-        className={`flex-shrink-0 flex flex-col border-r border-white/[0.06] bg-[#0c0c12] transition-all duration-300 ${
-          sidebarOpen ? 'w-72' : 'w-0 overflow-hidden'
+        className={`fixed inset-y-0 left-0 z-40 w-72 min-w-0 flex-shrink-0 flex flex-col border-r border-white/[0.06] bg-[#0c0c12] overflow-hidden transition-transform duration-300 ease-out lg:static lg:z-auto lg:transition-[width] lg:duration-300 ${
+          sidebarOpen ? 'translate-x-0 lg:w-72' : '-translate-x-full lg:translate-x-0 lg:w-0 lg:border-r-0'
         }`}
       >
         {/* Sidebar header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-white/[0.06]">
           <button
             onClick={() => navigate('/')}
-            className="flex items-center gap-2 text-white/80 hover:text-white transition-colors"
+            className="flex items-center gap-2 text-white/80 hover:text-white transition-colors group"
           >
-            <div className="w-6 h-6 rounded bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-[10px] font-black">B</div>
+            <div
+              className="w-6 h-6 rounded-md bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-[10px] font-black text-black transition-transform duration-300 group-hover:scale-110"
+              style={{ boxShadow: '0 0 14px -2px rgba(94,158,255,0.55), inset 0 1px 0 rgba(255,255,255,0.35)' }}
+            >
+              B
+            </div>
             <span className="text-sm font-bold tracking-tight">BYOOS</span>
           </button>
-          <button onClick={() => setSidebarOpen(false)} className="text-white/30 hover:text-white/60 transition-colors">
+          <button onClick={() => setSidebarOpen(false)} className="p-1.5 rounded-full text-white/30 hover:text-white/70 hover:bg-white/[0.07] transition-all">
             <X size={14} />
           </button>
         </div>
@@ -43,10 +56,13 @@ export default function AppShell({ children }) {
             <span className="text-[11px] text-white/30 font-medium uppercase tracking-widest">Progress</span>
             <span className="text-[11px] text-white/50 font-mono">{getCompletedCount()} / {curriculum.filter(m => !m.comingSoon).length}</span>
           </div>
-          <div className="h-1 bg-white/5 rounded-full overflow-hidden">
+          <div className="h-1.5 bg-white/5 rounded-full overflow-hidden">
             <div
               className="h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full transition-all duration-700"
-              style={{ width: `${(getCompletedCount() / curriculum.filter(m => !m.comingSoon).length) * 100}%` }}
+              style={{
+                width: `${(getCompletedCount() / curriculum.filter(m => !m.comingSoon).length) * 100}%`,
+                boxShadow: '0 0 10px rgba(94,158,255,0.6)',
+              }}
             />
           </div>
         </div>
@@ -61,21 +77,24 @@ export default function AppShell({ children }) {
             return (
               <button
                 key={mod.id}
-                onClick={() => !locked && navigate(`/chapter/${mod.id}`)}
+                onClick={() => {
+                  if (locked) return
+                  navigate(`/chapter/${mod.id}`)
+                  if (window.innerWidth < 1024) setSidebarOpen(false)
+                }}
                 disabled={locked}
                 className={`w-full text-left px-4 py-3 flex items-start gap-3 transition-all duration-200 group relative ${
-                  isActive
-                    ? 'bg-white/[0.06]'
-                    : locked
-                    ? 'opacity-40 cursor-not-allowed'
-                    : 'hover:bg-white/[0.03] cursor-pointer'
+                  locked ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer hover:bg-white/[0.035]'
                 }`}
+                style={isActive ? {
+                  background: `linear-gradient(90deg, ${mod.color}14, transparent 70%)`,
+                } : {}}
               >
                 {/* Active indicator */}
                 {isActive && (
                   <div
-                    className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-6 rounded-r"
-                    style={{ backgroundColor: mod.color }}
+                    className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-7 rounded-r"
+                    style={{ backgroundColor: mod.color, boxShadow: `0 0 8px ${mod.color}` }}
                   />
                 )}
 
@@ -114,7 +133,7 @@ export default function AppShell({ children }) {
             {!sidebarOpen && (
               <button
                 onClick={() => setSidebarOpen(true)}
-                className="text-white/30 hover:text-white/70 transition-colors mr-1"
+                className="p-1.5 rounded-full text-white/30 hover:text-white/70 hover:bg-white/[0.07] transition-all mr-1"
               >
                 <Menu size={16} />
               </button>
@@ -127,7 +146,7 @@ export default function AppShell({ children }) {
                 >
                   {current.icon} {current.number}
                 </span>
-                <span className="text-sm text-white/60 truncate max-w-xs">{current.title}</span>
+                <span className="text-sm text-white/60 truncate max-w-[140px] sm:max-w-xs">{current.title}</span>
               </div>
             )}
           </div>
@@ -137,14 +156,14 @@ export default function AppShell({ children }) {
             <button
               onClick={() => prev && navigate(`/chapter/${prev.id}`)}
               disabled={!prev}
-              className="p-1.5 rounded text-white/30 hover:text-white/70 disabled:opacity-20 disabled:cursor-not-allowed transition-colors"
+              className="p-1.5 rounded-full text-white/35 hover:text-white/80 hover:bg-white/[0.07] disabled:opacity-20 disabled:hover:bg-transparent disabled:cursor-not-allowed transition-all"
             >
               <ChevronLeft size={16} />
             </button>
             <button
               onClick={() => next && !next.comingSoon && navigate(`/chapter/${next.id}`)}
               disabled={!next || next.comingSoon}
-              className="p-1.5 rounded text-white/30 hover:text-white/70 disabled:opacity-20 disabled:cursor-not-allowed transition-colors"
+              className="p-1.5 rounded-full text-white/35 hover:text-white/80 hover:bg-white/[0.07] disabled:opacity-20 disabled:hover:bg-transparent disabled:cursor-not-allowed transition-all"
             >
               <ChevronRight size={16} />
             </button>

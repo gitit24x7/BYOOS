@@ -69,7 +69,7 @@ export default function InterruptTraceSim() {
               className={`px-2.5 py-1 rounded-lg text-[11px] font-mono font-bold transition-all ${
                 source === key ? 'text-black' : 'bg-white/[0.04] text-white/40 hover:bg-white/[0.08]'
               }`}
-              style={source === key ? { backgroundColor: s.color } : {}}
+              style={source === key ? { backgroundColor: s.color, boxShadow: `0 4px 14px -4px ${s.color}` } : {}}
             >
               {s.label}
             </button>
@@ -106,18 +106,19 @@ export default function InterruptTraceSim() {
             })}
           </div>
           <div className="flex gap-2 flex-shrink-0">
-            <button onClick={reset} className="p-1.5 rounded text-white/30 hover:text-white/60 transition-colors"><RotateCcw size={13} /></button>
+            <button onClick={reset} className="p-1.5 rounded-full text-white/30 hover:text-white/70 hover:bg-white/[0.07] transition-all"><RotateCcw size={13} /></button>
             <button
               onClick={() => { if (step < STAGES.length - 1) { setAuto(true); if (step === -1) setStep(0) } }}
               disabled={step >= STAGES.length - 1}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-red-500 text-black hover:bg-red-400 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+              className="btn-primary flex items-center gap-1.5 px-3 py-1.5 text-xs"
+              style={{ background: 'linear-gradient(135deg, #f87171, #fb923c)', '--btn-glow': 'rgba(248,113,113,0.4)' }}
             >
               <Zap size={11} /> Auto
             </button>
             <button
               onClick={() => setStep(s => Math.min(s + 1, STAGES.length - 1))}
               disabled={step >= STAGES.length - 1}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-white/10 text-white/60 hover:bg-white/15 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+              className="btn-secondary flex items-center gap-1.5 px-3 py-1.5 text-xs"
             >
               Step <ChevronRight size={11} />
             </button>

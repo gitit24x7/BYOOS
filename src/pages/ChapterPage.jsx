@@ -100,7 +100,7 @@ export default function ChapterPage() {
         </p>
         <button
           onClick={() => navigate('/')}
-          className="mt-2 px-5 py-2.5 rounded-full text-sm font-bold bg-white/[0.07] text-white/60 hover:bg-white/[0.12] transition-all"
+          className="btn-secondary mt-2 px-5 py-2.5 text-sm"
         >
           ← Back to curriculum
         </button>

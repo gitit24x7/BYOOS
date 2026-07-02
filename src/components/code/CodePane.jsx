@@ -111,7 +111,7 @@ export default function CodePane({ block }) {
                 </code>
                 <button
                   onClick={() => setActiveAnnotation(null)}
-                  className="text-white/20 hover:text-white/50 transition-colors flex-shrink-0 text-xs"
+                  className="text-white/20 hover:text-white/60 hover:bg-white/[0.07] rounded-full px-2 py-1 transition-all flex-shrink-0 text-xs"
                 >
                   close ×
                 </button>

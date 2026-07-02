@@ -79,8 +79,8 @@ export default function TheReveal({ reveal, onNext }) {
           </p>
           <button
             onClick={onNext}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-sm font-bold text-black transition-all hover:scale-105 active:scale-95"
-            style={{ background: 'linear-gradient(135deg, #5e9eff, #a78bfa)', boxShadow: '0 0 30px rgba(94,158,255,0.2)' }}
+            className="btn-primary inline-flex items-center gap-2 px-6 py-3 text-sm"
+            style={{ background: 'linear-gradient(135deg, #5e9eff, #a78bfa)', '--btn-glow': 'rgba(94,158,255,0.4)' }}
           >
             Continue to next chapter <ArrowRight size={15} strokeWidth={2.5} />
           </button>

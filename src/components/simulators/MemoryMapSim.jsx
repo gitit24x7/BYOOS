@@ -66,7 +66,7 @@ export default function MemoryMapSim() {
                   ? 'text-black scale-105'
                   : 'text-white/40 bg-white/[0.04] hover:bg-white/[0.08]'
               }`}
-              style={selectedProcess === proc.id ? { backgroundColor: proc.color } : {}}
+              style={selectedProcess === proc.id ? { backgroundColor: proc.color, boxShadow: `0 4px 14px -4px ${proc.color}` } : {}}
             >
               {proc.emoji} {proc.name}
             </button>

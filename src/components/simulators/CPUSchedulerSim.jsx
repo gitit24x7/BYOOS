@@ -80,16 +80,13 @@ export default function CPUSchedulerSim() {
           <span className="text-xs font-mono text-white/50">CPU Round-Robin Scheduler</span>
         </div>
         <div className="flex items-center gap-2">
-          <button onClick={reset} className="p-1.5 rounded text-white/30 hover:text-white/60 transition-colors">
+          <button onClick={reset} className="p-1.5 rounded-full text-white/30 hover:text-white/70 hover:bg-white/[0.07] transition-all">
             <RotateCcw size={13} />
           </button>
           <button
             onClick={() => setRunning(r => !r)}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
-              running
-                ? 'bg-white/10 text-white/60 hover:bg-white/15'
-                : 'bg-green-500 text-black hover:bg-green-400'
-            }`}
+            className={running ? 'btn-secondary flex items-center gap-1.5 px-3 py-1.5 text-xs' : 'btn-primary flex items-center gap-1.5 px-3 py-1.5 text-xs'}
+            style={running ? {} : { background: 'linear-gradient(135deg, #4ade80, #22d3ee)', '--btn-glow': 'rgba(74,222,128,0.4)' }}
           >
             {running ? <><Pause size={11} /> Pause</> : <><Play size={11} fill="black" /> Run</>}
           </button>

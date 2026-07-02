@@ -22,19 +22,19 @@ export default function TraceChain({ block }) {
       <div className="flex items-center justify-between px-5 py-3.5 border-b border-white/[0.06] bg-white/[0.02] gap-3 flex-wrap">
         <span className="text-xs font-bold text-white/60">{title}</span>
         <div className="flex gap-2">
-          <button onClick={reset} className="p-1.5 rounded text-white/30 hover:text-white/60 transition-colors"><RotateCcw size={13} /></button>
+          <button onClick={reset} className="p-1.5 rounded-full text-white/30 hover:text-white/70 hover:bg-white/[0.07] transition-all"><RotateCcw size={13} /></button>
           <button
             onClick={() => { if (step < steps.length - 1) { setAuto(true); if (step === -1) setStep(0) } }}
             disabled={step >= steps.length - 1}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-black disabled:opacity-30 disabled:cursor-not-allowed transition-all"
-            style={{ backgroundColor: color }}
+            className="btn-primary flex items-center gap-1.5 px-3 py-1.5 text-xs"
+            style={{ backgroundColor: color, '--btn-glow': `${color}70` }}
           >
             <Zap size={11} /> Auto-play
           </button>
           <button
             onClick={() => setStep(s => Math.min(s + 1, steps.length - 1))}
             disabled={step >= steps.length - 1}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-white/10 text-white/60 hover:bg-white/15 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+            className="btn-secondary flex items-center gap-1.5 px-3 py-1.5 text-xs"
           >
             Step <ChevronRight size={11} />
           </button>

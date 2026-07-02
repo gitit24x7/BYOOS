@@ -28,7 +28,7 @@ export default function SocraticPause({ block }) {
           {block.options.map((opt, i) => {
             const isSelected = selected === i
             const isCorrect = i === block.answer
-            let classes = 'border border-white/[0.08] bg-white/[0.03] text-white/70 hover:bg-white/[0.06] hover:text-white cursor-pointer'
+            let classes = 'border border-white/[0.08] bg-white/[0.03] text-white/70 hover:bg-white/[0.06] hover:border-white/[0.16] hover:text-white hover:-translate-y-0.5 cursor-pointer'
 
             if (answered) {
               if (isCorrect) classes = 'border border-green-500/40 bg-green-500/10 text-green-200 cursor-default'

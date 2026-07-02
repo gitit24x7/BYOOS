@@ -146,16 +146,13 @@ export default function SyscallTraceSim() {
           <span className="text-xs font-mono text-white/50">System Call Tracer — printf("Hello\n")</span>
         </div>
         <div className="flex gap-2">
-          <button onClick={reset} className="p-1.5 rounded text-white/30 hover:text-white/60 transition-colors">
+          <button onClick={reset} className="p-1.5 rounded-full text-white/30 hover:text-white/70 hover:bg-white/[0.07] transition-all">
             <RotateCcw size={13} />
           </button>
           <button
             onClick={advance}
-            className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all ${
-              done
-                ? 'bg-white/10 text-white/40 hover:bg-white/15'
-                : 'bg-red-500 text-white hover:bg-red-400'
-            }`}
+            className={done ? 'btn-secondary flex items-center gap-1.5 px-3.5 py-1.5 text-xs' : 'btn-primary flex items-center gap-1.5 px-3.5 py-1.5 text-xs'}
+            style={done ? {} : { background: 'linear-gradient(135deg, #f87171, #fb923c)', '--btn-glow': 'rgba(248,113,113,0.4)', color: '#fff' }}
           >
             {done ? <>↺ Replay</> : currentLayer === -1 ? <><Play size={11} fill="white" /> Start</> : <>Next step <ChevronRight size={11} /></>}
           </button>
