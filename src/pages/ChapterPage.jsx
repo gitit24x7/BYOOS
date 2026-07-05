@@ -145,6 +145,7 @@ export default function ChapterPage() {
               <MysteryOpener
                 data={data.mystery}
                 onReady={() => setPhase('content')}
+                color={meta.color}
               />
             </motion.div>
           ) : (
@@ -251,6 +252,7 @@ export default function ChapterPage() {
                       <TheReveal
                         reveal={data.reveal}
                         onNext={goToNext}
+                        color={meta.color}
                       />
                     )}
                   </div>

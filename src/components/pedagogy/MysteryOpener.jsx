@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 
-export default function MysteryOpener({ data, onReady }) {
+export default function MysteryOpener({ data, onReady, color = '#f97316' }) {
   const [revealed, setRevealed] = useState(false)
   const [lineIndex, setLineIndex] = useState(0)
 
@@ -19,10 +19,10 @@ export default function MysteryOpener({ data, onReady }) {
 
   return (
     <div className="relative flex flex-col items-center justify-center h-full bg-[#09090d] overflow-hidden">
-      {/* Background glow */}
+      {/* Background glow — tinted with this module's own color */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <div className="w-[600px] h-[600px] rounded-full bg-blue-600/6 blur-3xl" />
-        <div className="absolute w-[320px] h-[320px] -translate-x-32 translate-y-24 rounded-full bg-purple-600/8 blur-3xl" />
+        <div className="w-[600px] h-[600px] rounded-full blur-3xl" style={{ backgroundColor: `${color}10` }} />
+        <div className="absolute w-[320px] h-[320px] -translate-x-32 translate-y-24 rounded-full blur-3xl" style={{ backgroundColor: `${color}14` }} />
       </div>
 
       {/* Grid overlay */}
@@ -71,11 +71,7 @@ export default function MysteryOpener({ data, onReady }) {
             <button
               onClick={onReady}
               className="btn-primary px-8 py-3.5 text-sm tracking-wide"
-              style={{
-                background: 'linear-gradient(135deg, #3b82f6, #8b5cf6)',
-                '--btn-glow': 'rgba(99,102,241,0.4)',
-                color: '#fff',
-              }}
+              style={{ backgroundColor: color, '--btn-glow': `${color}70` }}
             >
               I'm ready — show me how →
             </button>

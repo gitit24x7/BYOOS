@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { ArrowRight, ChevronRight } from 'lucide-react'
 
-export default function TheReveal({ reveal, onNext }) {
+export default function TheReveal({ reveal, onNext, color = '#f97316' }) {
   const [activeNode, setActiveNode] = useState(null)
   const [allShown, setAllShown] = useState(false)
 
@@ -29,16 +29,16 @@ export default function TheReveal({ reveal, onNext }) {
                 if (i === reveal.chain.length - 1) setAllShown(true)
               }}
               className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border transition-all duration-200 hover:scale-105 cursor-pointer ${
-                activeNode === i
-                  ? 'border-blue-500/40 bg-blue-500/10'
-                  : 'border-white/[0.08] bg-white/[0.03] hover:border-white/[0.15]'
+                activeNode === i ? '' : 'border-white/[0.08] bg-white/[0.03] hover:border-white/[0.15]'
               }`}
+              style={activeNode === i ? { borderColor: `${color}60`, backgroundColor: `${color}18` } : {}}
             >
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-black border transition-colors ${
-                activeNode === i
-                  ? 'border-blue-400/50 bg-blue-500/20 text-blue-300'
-                  : 'border-white/10 bg-white/5 text-white/40'
-              }`}>
+              <div
+                className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-black border transition-colors ${
+                  activeNode === i ? '' : 'border-white/10 bg-white/5 text-white/40'
+                }`}
+                style={activeNode === i ? { borderColor: `${color}80`, backgroundColor: `${color}30`, color } : {}}
+              >
                 {i + 1}
               </div>
               <span className="text-[11px] font-semibold text-white/70 text-center max-w-[80px] leading-tight">
@@ -60,7 +60,8 @@ export default function TheReveal({ reveal, onNext }) {
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: reveal.chain.length * 0.12 + 0.3 }}
-        className="max-w-2xl mx-auto p-5 md:p-6 rounded-2xl bg-gradient-to-br from-blue-950/30 via-purple-950/20 to-blue-950/30 border border-blue-500/20"
+        className="max-w-2xl mx-auto p-5 md:p-6 rounded-2xl border"
+        style={{ background: `linear-gradient(135deg, ${color}14, transparent 60%, ${color}0f)`, borderColor: `${color}30` }}
       >
         <p className="text-sm text-white/60 leading-relaxed text-center">{reveal.finalInsight}</p>
       </motion.div>
@@ -80,7 +81,7 @@ export default function TheReveal({ reveal, onNext }) {
           <button
             onClick={onNext}
             className="btn-primary inline-flex items-center gap-2 px-6 py-3 text-sm"
-            style={{ background: 'linear-gradient(135deg, #5e9eff, #a78bfa)', '--btn-glow': 'rgba(94,158,255,0.4)' }}
+            style={{ backgroundColor: color, '--btn-glow': `${color}70` }}
           >
             Continue to next chapter <ArrowRight size={15} strokeWidth={2.5} />
           </button>

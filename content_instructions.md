@@ -304,6 +304,15 @@ dw 0xAA55                      ; (13)
 4. **The annotation voice is always direct address:** "We're doing X here." "Notice that..." "You might be wondering why..."
 5. **After every multi-line code block, write one "What just happened?" summary paragraph.** Plain English. No jargon. One sentence per step.
 
+### When a line introduces syntax the reader hasn't seen before
+
+This is the difference between a reader who can follow along and a reader who can actually write the code themselves later, unassisted. Explaining what a line *does* is not enough if the *shape* of the line — the syntax itself — is new. Beej's Guide never assumes a construct is self-explanatory just because it's short.
+
+6. **Name the construct before explaining its effect.** Don't just say what `__attribute__((packed))` does — say "this is a GCC-specific attribute, written as `__attribute__((name))` right after a struct declaration." A reader who has never seen this syntax needs to know what *kind* of thing it is before they can look up more of it or reuse the pattern themselves.
+7. **For inline assembly, unpack the syntax piece by piece — every time it's used, not just the first.** `__asm__ volatile ("outb %0, %1" : : "a"(value), "Nd"(port))` is unreadable to a beginner as a block. Break down: what `volatile` means here, what the colons separate (output operands / input operands / clobbers), what `"a"` and `"Nd"` mean as constraint codes, and why the operand order is reversed from the AT&T mnemonic. Never assume a reader remembers a syntax rule from three modules ago — a one-clause reminder costs nothing and prevents them from silently guessing wrong.
+8. **When a line uses an operator or token in an unfamiliar way, call out the general rule, not just this instance.** If a line uses `&` for a bitmask, briefly distinguish it from `&` for address-of if there's any chance of confusion in context. The goal is that the reader leaves able to write a *different* line using the same construct, not just able to explain this exact one.
+9. **Prefer showing the syntax rule once, explicitly, over repeating instances without ever stating the rule.** If a pattern (like a shift-then-OR, or a port I/O pair) recurs across modules, the first occurrence should teach the rule in general form; later occurrences can reference it by name ("the shift-then-OR pattern from Module P01") instead of re-deriving it — but never skip explaining a genuinely new piece of syntax just because a *similar-looking* one appeared before.
+
 ---
 
 ## 8. The Explicit Insight

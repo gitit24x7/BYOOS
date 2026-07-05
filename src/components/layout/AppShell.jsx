@@ -38,8 +38,8 @@ export default function AppShell({ children }) {
             className="flex items-center gap-2 text-white/80 hover:text-white transition-colors group"
           >
             <div
-              className="w-6 h-6 rounded-md bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-[10px] font-black text-black transition-transform duration-300 group-hover:scale-110"
-              style={{ boxShadow: '0 0 14px -2px rgba(94,158,255,0.55), inset 0 1px 0 rgba(255,255,255,0.35)' }}
+              className="w-6 h-6 rounded-md bg-gradient-to-br from-amber-400 to-orange-600 flex items-center justify-center text-[10px] font-black font-mono text-black transition-transform duration-300 group-hover:scale-110"
+              style={{ boxShadow: '0 0 14px -2px rgba(249,115,22,0.55), inset 0 1px 0 rgba(255,255,255,0.35)' }}
             >
               B
             </div>
