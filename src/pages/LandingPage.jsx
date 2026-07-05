@@ -412,6 +412,10 @@ export default function LandingPage() {
                 ReactMastery
                 <span className="block text-xs mt-1 leading-relaxed" style={{ color: '#5f7d99' }}>Learn React by writing code, not reading theory — pick up JS fundamentals along the way.</span>
               </a>
+              <a href="https://wiki.osdev.org/" target="_blank" rel="noopener noreferrer" className="text-sm text-[#9fb0c8] hover:text-[#eef3fa] transition-colors">
+                OSDev Wiki
+                <span className="block text-xs mt-1 leading-relaxed" style={{ color: '#5f7d99' }}>For more old-style content, the OSDev wiki is the reference the whole hobby OS community builds from.</span>
+              </a>
             </div>
           </div>
         </div>
