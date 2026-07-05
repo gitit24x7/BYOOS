@@ -82,26 +82,26 @@ export default function LandingPage() {
 
       {/* ===================== HERO ===================== */}
       <section className="relative flex flex-col items-center justify-center px-6 pt-20 pb-24 md:pt-24 md:pb-28" style={{ backgroundImage: 'radial-gradient(circle at 50% -5%, rgba(53,224,234,.12), transparent 55%)' }}>
-        <motion.span
+        <motion.h1
           initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
           className="font-mono text-xs uppercase mb-5" style={{ letterSpacing: '.24em', color: '#35e0ea' }}
         >
           Build Your Own Operating System
-        </motion.span>
+        </motion.h1>
 
-        <motion.h1
+        <motion.h2
           initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 }}
           className="text-center font-bold tracking-tight max-w-3xl text-4xl sm:text-5xl md:text-7xl leading-[1.03]"
           style={{ letterSpacing: '-.03em' }}
         >
           Your machine, from <span style={{ color: '#f6b73c' }}>POST</span> to <span style={{ color: '#ff6b81' }}>prompt</span>.
-        </motion.h1>
+        </motion.h2>
 
         <motion.p
           initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.16 }}
           className="mt-5 max-w-xl text-center text-[#9fb0c8] text-base md:text-lg leading-relaxed"
         >
-          A first-principles, interactive textbook that teaches how operating systems really work — from the 512-byte bootloader to schedulers, virtual memory, and system calls. Learn by doing, not memorizing.
+          Learn how to build your own operating system from scratch, first-principles and interactive — from a 512-byte bootloader to schedulers, virtual memory, and system calls. Learn by doing, not memorizing.
         </motion.p>
 
         {/* Terminal boot log */}

@@ -46,6 +46,12 @@ export default function ChapterPage() {
     if (contentRef.current) contentRef.current.scrollTop = 0
   }, [moduleId])
 
+  // Per-module page title, for search relevance on individual chapter pages
+  useEffect(() => {
+    if (meta) document.title = `${meta.title} — Build Your Own Operating System | BYOOS`
+    return () => { document.title = 'BYOOS — How to Build Your Own Operating System From Scratch' }
+  }, [meta])
+
   // Keyboard navigation: ← / → between modules, Escape → home
   useEffect(() => {
     const onKey = (e) => {
