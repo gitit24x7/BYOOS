@@ -12,6 +12,13 @@ import ForkTreeSim from '../simulators/ForkTreeSim'
 import BitFlipperSim from '../simulators/BitFlipperSim'
 import ProtectedModeSim from '../simulators/ProtectedModeSim'
 import InterruptTraceSim from '../simulators/InterruptTraceSim'
+import PicRemapSim from '../simulators/PicRemapSim'
+import InterruptStackSim from '../simulators/InterruptStackSim'
+import PitDivisorSim from '../simulators/PitDivisorSim'
+import PageWalkSim from '../simulators/PageWalkSim'
+import HeapAllocatorSim from '../simulators/HeapAllocatorSim'
+import ScancodeTypingSim from '../simulators/ScancodeTypingSim'
+import KernelShellSim from '../simulators/KernelShellSim'
 
 // Render inline markdown-ish text: **bold** and `code`
 function RichText({ text }) {
@@ -82,6 +89,13 @@ function SimulatorBlock({ block }) {
   if (block.id === 'bit-flipper-sim') return <BitFlipperSim />
   if (block.id === 'protected-mode-sim') return <ProtectedModeSim />
   if (block.id === 'interrupt-trace-sim') return <InterruptTraceSim />
+  if (block.id === 'pic-remap-sim') return <PicRemapSim />
+  if (block.id === 'interrupt-stack-sim') return <InterruptStackSim />
+  if (block.id === 'pit-divisor-sim') return <PitDivisorSim />
+  if (block.id === 'page-walk-sim') return <PageWalkSim />
+  if (block.id === 'heap-allocator-sim') return <HeapAllocatorSim />
+  if (block.id === 'scancode-typing-sim') return <ScancodeTypingSim />
+  if (block.id === 'kernel-shell-sim') return <KernelShellSim />
   return null
 }
 

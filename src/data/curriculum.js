@@ -191,7 +191,6 @@ export const curriculum = [
     icon: '🔌',
     tags: ['Port I/O', 'Inline Assembly', 'Hardware'],
     section: 'Bring-Up',
-    comingSoon: true,
   },
   {
     id: 'B02',
@@ -204,7 +203,6 @@ export const curriculum = [
     icon: '🚀',
     tags: ['Multiboot', 'GRUB', 'Linker'],
     section: 'Bring-Up',
-    comingSoon: true,
   },
   {
     id: 'B03',
@@ -217,7 +215,6 @@ export const curriculum = [
     icon: '🎛️',
     tags: ['PIC', 'IRQ Remap', 'Port I/O'],
     section: 'Bring-Up',
-    comingSoon: true,
   },
   {
     id: 'B04',
@@ -230,7 +227,6 @@ export const curriculum = [
     icon: '🪝',
     tags: ['ISR Stubs', 'Assembly', 'Interrupts'],
     section: 'Bring-Up',
-    comingSoon: true,
   },
   {
     id: 'B05',
@@ -243,7 +239,6 @@ export const curriculum = [
     icon: '💓',
     tags: ['PIT', 'Timer', 'Port I/O'],
     section: 'Bring-Up',
-    comingSoon: true,
   },
   {
     id: 'B06',
@@ -256,7 +251,6 @@ export const curriculum = [
     icon: '🗺️',
     tags: ['Paging', 'Page Directory', 'CR0'],
     section: 'Bring-Up',
-    comingSoon: true,
   },
   {
     id: 'B07',
@@ -269,7 +263,6 @@ export const curriculum = [
     icon: '🧱',
     tags: ['kmalloc', 'Heap', 'Free List'],
     section: 'Bring-Up',
-    comingSoon: true,
   },
   {
     id: 'B08',
@@ -282,7 +275,6 @@ export const curriculum = [
     icon: '🔁',
     tags: ['Context Switch', 'Scheduler', 'Assembly'],
     section: 'Bring-Up',
-    comingSoon: true,
   },
   {
     id: 'B09',
@@ -295,7 +287,6 @@ export const curriculum = [
     icon: '⌨️',
     tags: ['Keyboard', 'Scancodes', 'IRQ1'],
     section: 'Bring-Up',
-    comingSoon: true,
   },
   {
     id: 'B10',
@@ -308,7 +299,6 @@ export const curriculum = [
     icon: '💻',
     tags: ['Capstone', 'Kernel Shell'],
     section: 'Bring-Up',
-    comingSoon: true,
   },
 ]
 
