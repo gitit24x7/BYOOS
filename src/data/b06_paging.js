@@ -165,6 +165,13 @@ void paging_init(void) {
             'The CPU performs no such safety check before enabling paging — setting bit 31 of CR0 always takes effect immediately, regardless of whether the currently executing code happens to be mapped. This is exactly why identity-mapping the kernel\'s own memory first is not optional.',
           ],
         },
+        {
+          type: 'checkpoint',
+          label: 'Checkpoint: Survive the Instant Paging Turns On',
+          command: 'paging_init();\n// the very next line of kernel code, executing normally',
+          output: `(execution continues past paging_init() — no page fault, no triple fault)`,
+          note: 'The moment cr0 |= 0x80000000 takes effect, the next instruction fetch is already translated through page_directory. If your kernel is still running the very next line — not reset, not frozen — the identity mapping covers your own code correctly. If it triple-faults exactly here, re-check that your kernel\'s load address actually falls within the first 4MB this chapter\'s single page table covers.',
+        },
       ],
     },
   ],

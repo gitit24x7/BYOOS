@@ -175,6 +175,17 @@ void keyboard_handler(void) {
             'There is no such automatic range-checking in C — every array access, valid or not, is simply computed as a memory offset and dereferenced. Safety here depends entirely on the programmer checking bounds explicitly, which this deliberately minimal driver does not yet do.',
           ],
         },
+        {
+          type: 'checkpoint',
+          label: 'Checkpoint: Real Keystrokes, Live',
+          command: '// with keyboard_handler wired into irq_handlers[1] (Module B04), just type',
+          output: `type "hi" ->
+kb_buffer: ['h', 'i']
+
+hold Shift, type "hi" ->
+kb_buffer: ['H', 'I']`,
+          note: 'Popping and printing the ring buffer\'s contents as you type is the real test — lowercase without Shift, uppercase with it held. Nothing prints at all almost always means IRQ1 never reached keyboard_handler(); the wrong case almost always means the Shift make/break codes (0x2A / 0xAA) aren\'t both being checked.',
+        },
       ],
     },
   ],

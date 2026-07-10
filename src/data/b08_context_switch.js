@@ -212,6 +212,13 @@ uint32_t schedule(uint32_t saved_esp) {
             'Neither popa nor iret perform any structural validation of what they\'re reading — this is exactly the same "a struct is only as correct as its layout matches real memory" lesson from Module B04, now shown as a hazard in constructing that memory by hand rather than just reading it.',
           ],
         },
+        {
+          type: 'checkpoint',
+          label: 'Checkpoint: Two Tasks, Actually Alternating',
+          command: 'task_create(task_a_entry, stack_a + 4096);\ntask_create(task_b_entry, stack_b + 4096);\n// each entry function just loops printing its own letter',
+          output: `AAAAABBBBBAAAAABBBBBAAAAABBBBB...`,
+          note: 'Each run of the same letter is roughly one PIT tick\'s worth of instructions — Module B05\'s 100 Hz heartbeat, made visible. If you see one letter print forever and the other never appears, current_task->next almost always isn\'t forming a real ring back to the first task.',
+        },
       ],
     },
   ],

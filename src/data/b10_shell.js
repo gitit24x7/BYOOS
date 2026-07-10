@@ -210,6 +210,6 @@ void shell_task(void) {
       { label: 'The prompt returns', sublabel: 'Forever — preempted by Module B08 on every tick, like anything else' },
     ],
     finalInsight: 'This is the actual, complete answer to the question this entire Bring-Up track opened with: what does it take to build the simplest real operating system? Nine mechanisms, each one genuinely necessary, none of them optional, wired together by a loop simple enough to read in thirty seconds. You did not simulate any of this. Every module in this track produced real code, and this chapter is the moment all of it runs together, at once, as one system.',
-    nextChapter: 'You have built a real, minimal, kernel-mode operating system: it boots under GRUB, handles hardware safely, keeps real time, manages real paged memory, runs more than one task, reads your keyboard, and talks back through a shell you can actually type into. Ring 3 — real user mode, a TSS, and the isolation a production OS needs — is the next harder phase, whenever you\'re ready for it.',
+    nextChapter: 'Every mechanism now exists, verified one chapter at a time — but no chapter has shown you all nine sitting in one real directory, built by one real command, in the one order that actually boots. Module B11 is that missing piece: the complete file tree, the real kernel_main() wiring everything together, the extended Makefile, and the honest list of what breaks when the order is wrong.',
   },
 }

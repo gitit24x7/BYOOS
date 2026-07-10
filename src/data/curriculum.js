@@ -300,6 +300,18 @@ export const curriculum = [
     tags: ['Capstone', 'Kernel Shell'],
     section: 'Bring-Up',
   },
+  {
+    id: 'B11',
+    number: 'B11',
+    title: 'Assembling Your Kernel',
+    subtitle: 'Ten modules built real, working pieces. None of them told you what folder to put them in.',
+    mystery: 'You have working code for ports, GRUB, the PIC, interrupts, a timer, paging, an allocator,\na scheduler, a keyboard, and a shell — verified, one chapter at a time, in isolation.\nNo chapter has ever shown you all of it sitting in one directory, built by one command,\nin the one order that actually boots. What does the whole, real thing look like at once?',
+    duration: '40 min',
+    color: '#f59e0b',
+    icon: '🧩',
+    tags: ['Capstone', 'Build System', 'Reference'],
+    section: 'Bring-Up',
+  },
 ]
 
 export const getModule = (id) => curriculum.find(m => m.id === id)

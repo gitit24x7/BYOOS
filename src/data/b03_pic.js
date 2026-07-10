@@ -187,6 +187,13 @@ void pic_remap(int offset1, int offset2) {
             'The 8259 does not have a hard failure mode like this — it will happily continue and leave initialization mode even with a malformed ICW3, running with whatever misconfigured cascade state resulted from the missing step. The failure here is silent, not a hang.',
           ],
         },
+        {
+          type: 'checkpoint',
+          label: 'Checkpoint: Interrupts Survive Being Turned On',
+          command: 'pic_remap(0x20, 0x28);\n__asm__ volatile ("sti");',
+          output: `(the kernel keeps running — no immediate triple fault, no reset back to the GRUB menu)`,
+          note: 'There\'s no visible screen output at this stage — the proof is that the system stays up at all. Before this module, enabling interrupts on an unremapped PIC risked an IRQ0 tick being misread as a Double Fault. If sti no longer crashes the instant it runs, the remap held. (A real IDT and a real timer aren\'t wired up yet either — Module B04 and B05 are what make an actual interrupt fire next.)',
+        },
       ],
     },
   ],

@@ -146,6 +146,17 @@ void pit_set_frequency(uint32_t hz) {
             'The PIT has no dependency on the PIC\'s configuration at all — it counts down and raises its output line regardless of what, if anything, is listening on the other end.',
           ],
         },
+        {
+          type: 'checkpoint',
+          label: 'Checkpoint: Watch It Actually Tick',
+          command: '(gdb) break isr32\n(gdb) continue\n(gdb) continue',
+          output: `Breakpoint 1, isr32 () at isr_stub.asm:85
+Breakpoint 1, isr32 () at isr_stub.asm:85
+Breakpoint 1, isr32 () at isr_stub.asm:85
+
+(hits again roughly every 10ms at 100 Hz — Module P07's GDB workflow, pointed at this chapter's ISR)`,
+          note: 'The shell\'s uptime command (Module B10) won\'t exist until later — right now, the honest way to prove the PIT is really ticking is Module P07\'s own GDB session: a breakpoint on isr32 that keeps hitting, unattended, roughly a hundred times a second.',
+        },
       ],
     },
   ],

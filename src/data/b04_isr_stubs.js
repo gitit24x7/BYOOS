@@ -177,6 +177,136 @@ void isr_handler(registers_t* regs) {
         },
       ],
     },
+    {
+      id: 'the-real-dispatch',
+      title: 'What the Handler Actually Does',
+      number: '04',
+      color: '#0d9488',
+      blocks: [
+        {
+          type: 'text',
+          content: `The isr_handler() shown above ended with a comment and nothing else: // dispatch based on regs->int_no. That was never finished code — it was a placeholder, the same kind of honest "not yet" this course has used before (Module P02's malloc, Module B07's coalescing). It's time to finish it, because a dispatcher that does nothing has a real, ugly consequence: right now, any CPU exception — a stray divide-by-zero, a bad pointer dereference — reaches isr_handler(), does nothing, returns through popa and iret as if nothing happened, and the interrupted code resumes running with whatever corrupted state caused the exception in the first place. Usually, that just triple-faults a moment later somewhere else entirely, with no indication of what actually went wrong.
+
+The fix has two halves, because int_no means two different things depending on its value. Below 32, it's one of Intel's reserved CPU exceptions (Module P05) — something the CPU itself detected as fatally wrong, and the only sane response is to stop, loudly. At 32 and above, it's a hardware IRQ arriving through Module B03's remapped PIC — something to handle and then explicitly tell the PIC "I'm done," a step this course hasn't mentioned yet but is not optional.`,
+        },
+        {
+          type: 'code',
+          language: 'c',
+          filename: 'panic.c + isr.c (completed)',
+          caption: 'A real panic screen for CPU exceptions, and the EOI hardware interrupts require but have never needed until now',
+          code: `// ---- panic.c ----
+#define COLOR_PANIC 0x4F   // white text on red — Module P02's high-byte attribute, a different color
+
+static const char* exception_names[32] = {
+    "Divide By Zero", "Debug", "NMI", "Breakpoint", "Overflow", "Bound Range",
+    "Invalid Opcode", "Device Not Available", "Double Fault", "Coprocessor Overrun",
+    "Invalid TSS", "Segment Not Present", "Stack Fault", "General Protection Fault",
+    "Page Fault", "Reserved", "x87 FPU Error", "Alignment Check", "Machine Check",
+    "SIMD FP Exception", "Virtualization", "Control Protection",
+    "Reserved", "Reserved", "Reserved", "Reserved", "Reserved", "Reserved",
+    "Reserved", "Reserved", "Reserved", "Reserved",
+};
+
+void panic(registers_t* regs) {
+    vga_clear(COLOR_PANIC);
+    vga_puts("KERNEL PANIC: ");
+    vga_puts(exception_names[regs->int_no]);
+
+    for (;;) {
+        __asm__ volatile ("hlt");
+    }
+}
+
+// ---- isr.c ----
+void (*irq_handlers[16])(void) = { 0 };
+
+void isr_handler(registers_t* regs) {
+    if (regs->int_no < 32) {
+        panic(regs);
+    }
+
+    int irq = regs->int_no - 32;
+    if (irq < 16 && irq_handlers[irq]) {
+        irq_handlers[irq]();
+    }
+
+    if (irq >= 8) outb(0xA0, 0x20);   // EOI to the slave too, for IRQ8-15
+    outb(0x20, 0x20);                  // EOI to the master — every hardware IRQ, no exceptions
+}`,
+          annotations: [
+            {
+              lines: [4, 5, 6, 7, 8, 9, 10, 11, 12],
+              label: 'static const char* exception_names[32] = { ... };',
+              what: 'An array of strings, indexed directly by exception vector — the exact same array-as-lookup-table idiom Module B09\'s scancode_ascii[] uses, just holding text instead of characters.',
+              why: 'regs->int_no is already, by construction, the exact index this table expects — Module B04\'s own stub pushed it there deliberately. exception_names[regs->int_no] turns an opaque number into something a human reading the screen can actually act on, instead of a bare digit that means nothing without the Intel manual open next to it.',
+              note: null,
+            },
+            {
+              lines: [15, 16, 17, 18, 19],
+              label: 'panic()',
+              what: 'Clears the screen to a distinct color, prints which exception fired, and halts forever.',
+              why: 'vga_clear and vga_puts are Module P02\'s original freestanding functions, unchanged — panic() needs no new output mechanism, only a new color (COLOR_PANIC) to make a crash visually unmistakable from normal output. for (;;) __asm__ volatile ("hlt"); is a deliberate infinite loop: hlt stops the CPU until the next interrupt, and looping on it forever means this task never resumes and never returns through the stub\'s popa/iret — the interrupted, exception-causing state is simply never restored, which is exactly the point.',
+              note: null,
+            },
+            {
+              lines: [23],
+              label: 'void (*irq_handlers[16])(void) = { 0 };',
+              what: 'An array of 16 function pointers, one slot per possible IRQ line, all starting as null.',
+              why: 'This is what lets Module B09\'s keyboard_handler(), or any future driver, plug into this shared dispatcher without isr_handler() needing to know about every driver by name. Something else — Module B11\'s kernel_main() — assigns irq_handlers[1] = keyboard_handler; once, during setup; isr_handler() only ever calls whatever is sitting in the slot for the IRQ that actually fired.',
+              note: null,
+            },
+            {
+              lines: [26, 27, 28],
+              label: 'if (regs->int_no < 32) { panic(regs); }',
+              what: 'Routes every CPU exception straight to panic(), before anything else in the function runs.',
+              why: 'panic() never returns — its for (;;) loop is deliberately infinite — so nothing below this if actually matters for an exception; execution simply never reaches it. This single branch is the entire difference between "a bad pointer dereference silently corrupts something and crashes mysteriously three functions later" and "a bad pointer dereference stops the machine immediately, on a red screen, naming exactly what went wrong."',
+              note: null,
+            },
+            {
+              lines: [30, 31, 32, 33],
+              label: 'int irq = regs->int_no - 32; if (irq < 16 && irq_handlers[irq]) { irq_handlers[irq](); }',
+              what: 'Converts the raw vector back into an IRQ number (undoing Module B03\'s remap offset), and calls whatever driver registered itself for that line, if anything did.',
+              why: 'regs->int_no is 32 for IRQ0, 33 for IRQ1, and so on — subtracting 32 recovers the original IRQ number Module B03\'s pic_remap(0x20, ...) shifted away from. The irq < 16 && ... check matters because int_no can legally be higher than 47 for other reasons in a larger kernel; guarding the array access here is the same bounds-safety discipline Module B09\'s own socratic question flagged as missing from its scancode table.',
+              note: null,
+            },
+            {
+              lines: [35, 36],
+              label: 'if (irq >= 8) outb(0xA0, 0x20); outb(0x20, 0x20);',
+              what: 'Sends the PIC End-Of-Interrupt (EOI) command — 0x20 — to the master, and to the slave too if the IRQ came from the slave\'s range (IRQ8-15).',
+              why: 'This is new, and it is not optional: the 8259 tracks which IRQ line it\'s currently servicing, and it will not deliver another interrupt on that same line — or, depending on priority, on lower-priority lines either — until it\'s explicitly told "I\'m done," by writing 0x20 to its command port. Module B05\'s upcoming timer, and Module B09\'s keyboard, will each fire exactly once and then silently stop forever without this line. Because IRQ8-15 physically cascade through the master (Module B03\'s own chapter), servicing one of them requires telling both chips, not just the slave.',
+              note: 'This step has nothing to do with CPU exceptions, which is exactly why the int_no < 32 branch above returns out of the function before ever reaching it — panic() halts forever, and even if it didn\'t, exceptions were never PIC-managed interrupt lines to begin with. EOI is purely PIC bookkeeping, relevant only to real hardware IRQs.',
+            },
+          ],
+        },
+        {
+          type: 'callout',
+          variant: 'warning',
+          content: 'Forgetting outb(0x20, 0x20) is one of the single most common real bugs in hobby OS development — and one of the most confusing to diagnose, because everything appears to work for exactly one tick or one keypress, then goes completely silent with no crash, no error, and no obvious cause. If Module B05\'s timer or Module B09\'s keyboard ever seems to fire once and never again, this line is the first thing to check.',
+        },
+        {
+          type: 'checkpoint',
+          label: 'Checkpoint: Trigger a Deliberate Exception',
+          command: '// temporarily add this one line inside kernel_main(), after idt_install():\n__asm__ volatile ("int $0x0");',
+          output: `KERNEL PANIC: Divide By Zero`,
+          note: 'The screen should turn solid white-on-red and stop responding entirely — not a triple fault, not a silent reboot back to the GRUB menu. If you see this, the exact chain this module built — stub, struct, dispatcher, panic() — is working end to end. Remove the int $0x0 line once you\'ve confirmed it.',
+        },
+        {
+          type: 'socratic',
+          question: 'panic()\'s for (;;) loop means execution never falls through to the EOI-sending lines at the bottom of isr_handler(). Given that, does skipping EOI on the CPU-exception path (int_no < 32) ever actually cause a problem?',
+          options: [
+            'Yes — every interrupt, exception or IRQ, must always send EOI or the PIC will permanently stop delivering any further interrupts at all',
+            'No — CPU exceptions aren\'t PIC-managed interrupt lines in the first place, so there is no PIC bookkeeping to close out, and panic() halting forever means there is no "resume" to protect against either way',
+            'It only matters if the exception happens to share a vector number with a remapped IRQ',
+          ],
+          answer: 1,
+          explanations: [
+            'EOI is specifically how software tells the 8259 PIC "this hardware interrupt is handled, you may deliver another." CPU exceptions are raised internally by the CPU itself, never routed through the PIC at all — there is no PIC-side state for an exception that needs closing out.',
+            'Exactly right, on both counts. Module B03\'s PIC only manages hardware IRQ lines (vectors 32 and up, after the remap) — it has no involvement in vectors 0-31, which the CPU generates directly. And separately, panic()\'s infinite hlt loop means this code path never returns to resume anything, so there\'s no scenario where a "missing EOI" could later cause a hang or a stuck interrupt line on this path — the machine is already halted, deliberately, forever.',
+            'Vector numbers below 32 are permanently reserved by Intel and never overlap with the remapped IRQ range (32-47) — Module B03\'s entire chapter was built specifically to guarantee this never happens.',
+          ],
+        },
+      ],
+    },
   ],
 
   reveal: {
@@ -186,9 +316,10 @@ void isr_handler(registers_t* regs) {
       { label: 'pusha', sublabel: 'All 8 general-purpose registers, safely preserved' },
       { label: 'push esp; call isr_handler', sublabel: 'The stack itself becomes the function argument' },
       { label: 'registers_t struct', sublabel: 'The same raw memory, read as named fields' },
-      { label: 'popa; iret', sublabel: 'Every register restored, interrupted code resumes unaware' },
+      { label: 'int_no < 32 → panic()', sublabel: 'A visible, permanent stop — never a silent triple fault' },
+      { label: 'int_no >= 32 → dispatch + EOI', sublabel: 'The registered driver runs, then the PIC is told "done"' },
     ],
-    finalInsight: 'Nothing about a C function makes it safe to run the instant hardware interrupts your CPU — that safety comes entirely from the stub you just built, saving exactly what a normal function call would never bother to save, and handing the C world a struct that is, byte for byte, the real stack. Every future interrupt handler in this course — the timer in Module B05, the keyboard in Module B09 — is built on exactly this pattern, unchanged.',
-    nextChapter: 'Next: the pieces are all in place — safe hardware access (Module B01), a kernel GRUB will load (Module B02), a PIC that won\'t collide with CPU exceptions (Module B03), and a safe path from raw interrupt to C (this module). Module B05 uses all four to build something your kernel has never had: a heartbeat, ticking at a rate you choose.',
+    finalInsight: 'Nothing about a C function makes it safe to run the instant hardware interrupts your CPU — that safety comes entirely from the stub you just built, saving exactly what a normal function call would never bother to save, and handing the C world a struct that is, byte for byte, the real stack. The dispatcher this section finished is what turns that safety into something useful: exceptions become a readable panic screen instead of a mysterious crash, and hardware IRQs become handled, acknowledged, and ready to fire again. Every future interrupt handler in this course — the timer in Module B05, the keyboard in Module B09 — is built on exactly this pattern.',
+    nextChapter: 'Next: the pieces are all in place — safe hardware access (Module B01), a kernel GRUB will load (Module B02), a PIC that won\'t collide with CPU exceptions (Module B03), and a safe, complete path from raw interrupt to C, including what happens when things go wrong (this module). Module B05 uses all four to build something your kernel has never had: a heartbeat, ticking at a rate you choose.',
   },
 }

@@ -224,6 +224,19 @@ SECTIONS
             'Entry point selection is controlled separately by the ENTRY(kernel_main) directive and the ELF header (Module P06) — it has no relationship to whether GRUB can find the Multiboot header. The two mechanisms fail independently.',
           ],
         },
+        {
+          type: 'checkpoint',
+          label: 'Checkpoint: GRUB Accepts Your Kernel',
+          command: 'grub-mkrescue -o byoos.iso isodir && qemu-system-i386 -cdrom byoos.iso',
+          output: `GNU GRUB  version 2.06
+
+*BYOOS
+
+Booting 'BYOOS'
+
+(no crash, no "invalid or unsupported executable format" — control reaches your kernel)`,
+          note: 'At this stage there is nothing to print yet — Module P02\'s screen code isn\'t wired in until Module B11 assembles everything together. The actual proof this module worked is negative: no "invalid or unsupported executable format" error, and QEMU does not immediately drop back to the GRUB menu or a rescue prompt.',
+        },
       ],
     },
   ],

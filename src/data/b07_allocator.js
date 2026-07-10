@@ -205,6 +205,16 @@ void kfree(void* ptr) {
             'This kfree() implementation performs no coalescing at all — freeing a block only ever flips its own free flag, with no awareness of, or attempt to merge with, whatever blocks happen to be adjacent to it in memory.',
           ],
         },
+        {
+          type: 'checkpoint',
+          label: 'Checkpoint: Real Addresses, Handed Out and Reclaimed',
+          command: 'void* a = kmalloc(64);\nvoid* b = kmalloc(128);\nkfree(a);\nvoid* c = kmalloc(32);',
+          output: `a = 0x00403000
+b = 0x0040304C
+kfree(a) -> block at 0x00403000 marked free
+c = 0x00403000   (reused a's freed block — first-fit found it before falling through to bump_alloc)`,
+          note: 'Printing each returned pointer (Module P02\'s vga_puts, once it exists) is the simplest real proof this allocator works: c reusing exactly a\'s old address confirms kfree() actually returned that block to the free list, and that kmalloc()\'s first-fit search found it.',
+        },
       ],
     },
   ],

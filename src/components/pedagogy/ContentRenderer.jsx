@@ -3,6 +3,8 @@ import SocraticPause from './SocraticPause'
 import ExplicitInsight, { WhatThisMeans } from './ExplicitInsight'
 import ConnectionBridge from './ConnectionBridge'
 import TraceChain from './TraceChain'
+import Checkpoint from './Checkpoint'
+import Troubleshoot from './Troubleshoot'
 import CodePane from '../code/CodePane'
 import CPUSchedulerSim from '../simulators/CPUSchedulerSim'
 import BootSequenceSim from '../simulators/BootSequenceSim'
@@ -116,6 +118,8 @@ export default function ContentRenderer({ blocks }) {
           case 'connection-bridge': return <ConnectionBridge key={i} block={block} />
           case 'what-this-means': return <WhatThisMeans key={i} block={block} />
           case 'trace':           return <TraceChain key={i} block={block} />
+          case 'checkpoint':      return <Checkpoint key={i} block={block} />
+          case 'troubleshoot':    return <Troubleshoot key={i} block={block} />
           default:               return null
         }
       })}

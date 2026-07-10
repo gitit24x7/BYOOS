@@ -31,9 +31,10 @@ import { b07 } from '../data/b07_allocator'
 import { b08 } from '../data/b08_context_switch'
 import { b09 } from '../data/b09_keyboard'
 import { b10 } from '../data/b10_shell'
+import { b11 } from '../data/b11_assembly'
 import { useProgress } from '../hooks/useProgress'
 
-const moduleData = { M00: m00, M01: m01, P01: p01, P02: p02, P03: p03, P04: p04, P05: p05, P06: p06, P07: p07, M02: m02, M03: m03, M04: m04, M05: m05, M06: m06, M07: m07, B01: b01, B02: b02, B03: b03, B04: b04, B05: b05, B06: b06, B07: b07, B08: b08, B09: b09, B10: b10 }
+const moduleData = { M00: m00, M01: m01, P01: p01, P02: p02, P03: p03, P04: p04, P05: p05, P06: p06, P07: p07, M02: m02, M03: m03, M04: m04, M05: m05, M06: m06, M07: m07, B01: b01, B02: b02, B03: b03, B04: b04, B05: b05, B06: b06, B07: b07, B08: b08, B09: b09, B10: b10, B11: b11 }
 
 export default function ChapterPage() {
   const { moduleId } = useParams()
